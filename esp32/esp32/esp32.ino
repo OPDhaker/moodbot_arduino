@@ -376,9 +376,16 @@ void handleRoot() {
 void handleCommand() {
   if (server.hasArg("cmd")) {
     String cmd = server.arg("cmd");
-    Serial2.println(cmd.charAt(0));
+    char command = cmd.charAt(0);
+    
+    // Send command to Arduino with a small delay between commands
+    Serial2.write(command);
+    Serial2.flush(); // Wait for transmission to complete
+    delay(50); // Prevent command flooding
+    
     Serial.print("Command sent to Arduino: ");
-    Serial.println(cmd);
+    Serial.println(command);
+    
     server.send(200, "text/plain", "OK");
   } else {
     server.send(400, "text/plain", "Missing cmd parameter");

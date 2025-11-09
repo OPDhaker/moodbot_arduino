@@ -68,9 +68,16 @@ void setup() {
 
 void loop() {
   // Check for Serial commands from ESP32
-  if (Serial.available() > 0) {
+  while (Serial.available() > 0) {
     char cmd = Serial.read();
-    handleCommand(cmd);
+    
+    // Only process valid commands, ignore garbage
+    if (cmd == 'W' || cmd == 'A' || cmd == 'S' || cmd == 'D' || 
+        cmd == 'X' || cmd == 'T' || cmd == '?') {
+      handleCommand(cmd);
+    }
+    
+    delay(10); // Small delay to prevent Serial overflow
   }
   
   // Auto mode obstacle avoidance
@@ -85,22 +92,27 @@ void handleCommand(char cmd) {
     case 'W': // Forward
       moveForward();
       Serial.println("MOVING:FORWARD");
+      Serial.flush(); // Ensure message is sent
       break;
     case 'S': // Backward
       moveBackward();
       Serial.println("MOVING:BACKWARD");
+      Serial.flush();
       break;
     case 'A': // Left
       turnLeft();
       Serial.println("MOVING:LEFT");
+      Serial.flush();
       break;
     case 'D': // Right
       turnRight();
       Serial.println("MOVING:RIGHT");
+      Serial.flush();
       break;
     case 'X': // Stop
       stopMotors();
       Serial.println("MOVING:STOP");
+      Serial.flush();
       break;
     case 'T': // Toggle auto mode
       autoMode = !autoMode;
@@ -110,11 +122,13 @@ void handleCommand(char cmd) {
         Serial.println("MODE:MANUAL");
         stopMotors();
       }
+      Serial.flush();
       break;
     case '?': // Status request
       Serial.print("STATUS:");
       Serial.print(autoMode ? "AUTO:" : "MANUAL:");
       Serial.println(getDistance());
+      Serial.flush();
       break;
   }
 }
