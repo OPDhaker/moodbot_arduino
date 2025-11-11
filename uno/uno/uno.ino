@@ -92,27 +92,32 @@ void handleCommand(char cmd) {
     case 'W': // Forward
       moveForward();
       Serial.println("MOVING:FORWARD");
-      Serial.flush(); // Ensure message is sent
+      Serial.flush();
+      delay(50); // Ensure message is sent
       break;
     case 'S': // Backward
       moveBackward();
       Serial.println("MOVING:BACKWARD");
       Serial.flush();
+      delay(50);
       break;
     case 'A': // Left
       turnLeft();
       Serial.println("MOVING:LEFT");
       Serial.flush();
+      delay(50);
       break;
     case 'D': // Right
       turnRight();
       Serial.println("MOVING:RIGHT");
       Serial.flush();
+      delay(50);
       break;
     case 'X': // Stop
       stopMotors();
       Serial.println("MOVING:STOP");
       Serial.flush();
+      delay(50);
       break;
     case 'T': // Toggle auto mode
       autoMode = !autoMode;
@@ -123,12 +128,14 @@ void handleCommand(char cmd) {
         stopMotors();
       }
       Serial.flush();
+      delay(50);
       break;
     case '?': // Status request
       Serial.print("STATUS:");
       Serial.print(autoMode ? "AUTO:" : "MANUAL:");
       Serial.println(getDistance());
       Serial.flush();
+      delay(50);
       break;
   }
 }
